@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHELF/64 — Game Dev Portfolio</title>
+<meta name="description" content="A shelf of shipped and in-progress games.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="scanlines" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">SHELF<span class="brand-slash">/</span>64</span>
+  </div>
+  <nav class="topnav">
+    <button class="nav-link" data-scroll="#shelf">Cartridges</button>
+    <button class="nav-link" data-scroll="#about">About</button>
+    <button class="nav-link nav-cta" id="openAddProject">Add a project</button>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div class="hero-copy">
+      <h1>Every game you've built,<br>on one shelf.</h1>
+      <p class="hero-sub">Insert a cartridge to play the demo, read the making-of notes, or jump to the source. New projects slot in any time — the shelf has no last row.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" data-scroll="#shelf">Browse the shelf</button>
+        <button class="btn btn-ghost" id="openAddProject2">How to add a project</button>
+      </div>
+    </div>
+
+    <div class="console" aria-hidden="true">
+      <div class="console-screen">
+        <div class="screen-glow"></div>
+        <pre class="boot-text" id="bootText"></pre>
+      </div>
+      <div class="console-vents">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="shelf-section" id="shelf">
+    <div class="shelf-head">
+      <h2>The shelf</h2>
+      <div class="filters" id="filters"></div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <p class="empty-state" id="emptyState" hidden>Nothing on this shelf yet — clear the filter or add a project.</p>
+  </section>
+
+  <section class="about" id="about">
+    <h2>About this shelf</h2>
+    <p>This page is a template: swap the copy, the palette, and every entry in <code>projects.js</code> for your own. The grid below scales to any number of cartridges — three or three hundred — because it's built from one JavaScript array, not hand-written HTML per project.</p>
+  </section>
+</main>
+
+<footer class="footer">
+  <p>Built with plain HTML, CSS and JS — no framework, no build step.</p>
+</footer>
+
+<!-- Project detail modal -->
+<div class="modal-overlay" id="detailOverlay" hidden>
+  <div class="modal detail-modal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+    <button class="modal-close" data-close>&times;</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<!-- Add project helper modal -->
+<div class="modal-overlay" id="addOverlay" hidden>
+  <div class="modal add-modal" role="dialog" aria-modal="true" aria-labelledby="addTitle">
+    <button class="modal-close" data-close>&times;</button>
+    <h3 id="addTitle">Add a project to the shelf</h3>
+    <p class="add-intro">This site is a static page — perfect for GitHub Pages, but it has no server to store uploads permanently. Fill this in and you'll get two things: a live preview on your shelf right now (saved in this browser only), and a ready-to-paste code block to drop into <code>projects.js</code> so it shows up for every visitor once you publish it.</p>
+
+    <form id="addForm">
+      <div class="field-row">
+        <label>Title <input required name="title" placeholder="Lantern Keep"></label>
+        <label>Year <input name="year" placeholder="2026"></label>
+      </div>
+      <label class="field-full">Tagline <input name="tagline" placeholder="A cozy roguelike about tending a dying lighthouse."></label>
+      <label class="field-full">Description <textarea name="description" rows="3" placeholder="What it is, what you built, what's interesting about it."></textarea></label>
+      <div class="field-row">
+        <label>Engine / tools <input name="engine" placeholder="Godot, Aseprite"></label>
+        <label>Tags (comma separated) <input name="tags" placeholder="roguelike, solo, pixel art"></label>
+      </div>
+      <div class="field-row">
+        <label>Cover image URL <input name="image" placeholder="assets/lantern-keep/cover.png"></label>
+        <label>Gallery URLs (comma separated) <input name="gallery" placeholder="assets/lantern-keep/1.png, assets/lantern-keep/2.png"></label>
+      </div>
+      <div class="field-row">
+        <label>Play / demo link <input name="playUrl" placeholder="https://yourname.itch.io/lantern-keep"></label>
+        <label>Source code link <input name="codeUrl" placeholder="https://github.com/you/lantern-keep"></label>
+      </div>
+      <div class="add-actions">
+        <button type="submit" class="btn btn-primary">Preview on shelf + generate code</button>
+      </div>
+    </form>
+
+    <div class="snippet-wrap" id="snippetWrap" hidden>
+      <label for="snippetOut">Paste this into <code>projects.js</code>, inside the <code>PROJECTS</code> array:</label>
+      <textarea id="snippetOut" readonly rows="10"></textarea>
+      <button class="btn btn-ghost" id="copySnippet">Copy code</button>
+    </div>
+  </div>
+</div>
+
+<script src="projects.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
