@@ -2,6 +2,28 @@
   "use strict";
 
   const LOCAL_KEY = "shelf64_local_projects";
+  const AUTH_KEY = "shelf64_admin";
+  const ADMIN_USERNAME = "blotis";
+  // SHA-256 of the admin password. Never store the plaintext password in the
+  // page source — this hash is checked client-side after the visitor types
+  // their password in.
+  const ADMIN_PASSWORD_HASH = "0cbdd693637b533d77883b4784d05e69aa5d3bca3313983252915a1ef73b719b";
+
+  // NOTE ON SECURITY: this site has no server, so there is no real login
+  // system possible — this check runs entirely in the visitor's browser.
+  // It stops casual visitors from adding projects, but anyone comfortable
+  // with browser dev tools could bypass it. Don't use this to gate anything
+  // truly private.
+
+  async function sha256(text) {
+    const data = new TextEncoder().encode(text);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  function isAdmin() {
+    return localStorage.getItem(AUTH_KEY) === "true";
+  }
 
   function getLocalProjects() {
     try {
@@ -13,15 +35,9 @@
   }
 
   function saveLocalProjects(list) {
-    try {
-      localStorage.setItem(LOCAL_KEY, JSON.stringify(list));
-    } catch (e) {
-      /* storage unavailable, ignore */
-    }
+    try { localStorage.setItem(LOCAL_KEY, JSON.stringify(list)); } catch (e) {}
   }
 
-  // Combine the checked-in projects.js data with anything added locally
-  // in this browser via the "Add a project" form.
   let allProjects = (typeof PROJECTS !== "undefined" ? PROJECTS : []).concat(getLocalProjects());
   let activeTag = "All";
 
@@ -42,13 +58,15 @@
       const btn = document.createElement("button");
       btn.className = "chip" + (tag === activeTag ? " active" : "");
       btn.textContent = tag;
-      btn.addEventListener("click", () => {
-        activeTag = tag;
-        renderFilters();
-        renderGrid();
-      });
+      btn.addEventListener("click", () => { activeTag = tag; renderFilters(); renderGrid(); });
       filtersEl.appendChild(btn);
     });
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str == null ? "" : String(str);
+    return div.innerHTML;
   }
 
   function cardTemplate(project) {
@@ -85,19 +103,11 @@
   }
 
   function renderGrid() {
-    const visible = activeTag === "All"
-      ? allProjects
-      : allProjects.filter(p => (p.tags || []).includes(activeTag));
-
+    const visible = activeTag === "All" ? allProjects : allProjects.filter(p => (p.tags || []).includes(activeTag));
     grid.innerHTML = "";
     visible.forEach(p => grid.appendChild(cardTemplate(p)));
     emptyState.hidden = visible.length !== 0;
-  }
-
-  function escapeHtml(str) {
-    const div = document.createElement("div");
-    div.textContent = str == null ? "" : String(str);
-    return div.innerHTML;
+    observeReveals();
   }
 
   // ---------- detail modal ----------
@@ -130,29 +140,79 @@
     overlay.addEventListener("click", e => { if (e.target === overlay) closeOverlay(overlay); });
   });
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape") {
-      document.querySelectorAll(".modal-overlay").forEach(o => closeOverlay(o));
-    }
+    if (e.key === "Escape") document.querySelectorAll(".modal-overlay").forEach(o => closeOverlay(o));
   });
 
   // ---------- nav scroll ----------
   document.querySelectorAll("[data-scroll]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelector(btn.dataset.scroll).scrollIntoView({ behavior: "smooth" });
-    });
+    btn.addEventListener("click", () => document.querySelector(btn.dataset.scroll).scrollIntoView({ behavior: "smooth" }));
   });
 
-  // ---------- add-project modal ----------
+  // ---------- auth ----------
+  const authControl = document.getElementById("authControl");
+  const loginOverlay = document.getElementById("loginOverlay");
+  const loginForm = document.getElementById("loginForm");
+  const loginError = document.getElementById("loginError");
+  const fabAdd = document.getElementById("fabAdd");
   const addOverlay = document.getElementById("addOverlay");
-  document.getElementById("openAddProject").addEventListener("click", () => openOverlay(addOverlay));
-  document.getElementById("openAddProject2").addEventListener("click", () => openOverlay(addOverlay));
 
+  function refreshAuthUI() {
+    if (isAdmin()) {
+      authControl.textContent = "Log out (" + ADMIN_USERNAME + ")";
+      authControl.classList.add("is-admin");
+    } else {
+      authControl.textContent = "Admin login";
+      authControl.classList.remove("is-admin");
+    }
+  }
+
+  authControl.addEventListener("click", () => {
+    if (isAdmin()) {
+      localStorage.removeItem(AUTH_KEY);
+      refreshAuthUI();
+    } else {
+      loginError.hidden = true;
+      loginForm.reset();
+      openOverlay(loginOverlay);
+    }
+  });
+
+  loginForm.addEventListener("submit", async e => {
+    e.preventDefault();
+    const data = new FormData(loginForm);
+    const username = (data.get("username") || "").trim();
+    const password = data.get("password") || "";
+    const hash = await sha256(password);
+
+    if (username === ADMIN_USERNAME && hash === ADMIN_PASSWORD_HASH) {
+      localStorage.setItem(AUTH_KEY, "true");
+      refreshAuthUI();
+      closeOverlay(loginOverlay);
+      openOverlay(addOverlay);
+    } else {
+      loginError.hidden = false;
+    }
+  });
+
+  fabAdd.addEventListener("click", () => {
+    if (isAdmin()) {
+      openOverlay(addOverlay);
+    } else {
+      loginError.hidden = true;
+      loginForm.reset();
+      openOverlay(loginOverlay);
+    }
+  });
+
+  // ---------- add project ----------
   const addForm = document.getElementById("addForm");
   const snippetWrap = document.getElementById("snippetWrap");
   const snippetOut = document.getElementById("snippetOut");
 
   addForm.addEventListener("submit", e => {
     e.preventDefault();
+    if (!isAdmin()) { closeOverlay(addOverlay); return; }
+
     const data = new FormData(addForm);
     const project = {
       id: (data.get("title") || "project").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || ("project-" + Date.now()),
@@ -168,7 +228,6 @@
       codeUrl: data.get("codeUrl") || ""
     };
 
-    // live preview: store locally and re-render immediately
     const local = getLocalProjects();
     local.push(project);
     saveLocalProjects(local);
@@ -176,9 +235,9 @@
     renderFilters();
     renderGrid();
 
-    // generate paste-ready code for projects.js
     snippetOut.value = "  " + JSON.stringify(project, null, 2).split("\n").join("\n  ") + ",";
     snippetWrap.hidden = false;
+    addForm.reset();
   });
 
   document.getElementById("copySnippet").addEventListener("click", () => {
@@ -201,19 +260,32 @@
     }
   });
 
+  // ---------- scroll reveal ----------
+  let revealObserver;
+  function observeReveals() {
+    if (!("IntersectionObserver" in window)) {
+      document.querySelectorAll(".reveal, .cartridge").forEach(el => el.classList.add("in-view"));
+      return;
+    }
+    if (!revealObserver) {
+      revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+    }
+    document.querySelectorAll(".reveal:not(.in-view), .cartridge:not(.in-view)").forEach(el => revealObserver.observe(el));
+  }
+
   // ---------- hero boot text ----------
-  const bootLines = [
-    "SHELF/64 BIOS v1.0",
-    "",
-    "Checking cartridge slot ... OK",
-    "Loading project index ...",
-  ];
+  const bootLines = ["SHELF/64 BIOS v1.0", "", "Checking cartridge slot ... OK", "Loading project index ..."];
 
   function typeBoot() {
     const el = document.getElementById("bootText");
-    let text = "";
-    let line = 0, char = 0;
-
+    let text = "", line = 0, char = 0;
     function tick() {
       if (line >= bootLines.length) {
         const count = allProjects.length;
@@ -227,8 +299,7 @@
         setTimeout(tick, 18);
       } else {
         text += current + "\n";
-        line++;
-        char = 0;
+        line++; char = 0;
         setTimeout(tick, 120);
       }
     }
@@ -236,7 +307,9 @@
   }
 
   // ---------- init ----------
+  refreshAuthUI();
   renderFilters();
   renderGrid();
   typeBoot();
+  observeReveals();
 })();

@@ -35,11 +35,26 @@ existing entry as a starting point:
 There's no cap on how many objects you add — the grid, the filter chips,
 and the boot-text counter on the hero screen all read from this array.
 
-The site also has an **"Add a project"** button in the browser itself. It
-won't publish anything on its own (this is a static site, so there's no
-server to save to) — but it previews your new project live in your own
-browser via local storage, and generates the exact code block above so you
-can paste it into `projects.js`.
+The site also has a **+ button** in the bottom-right corner. Clicking it
+asks you to log in first (username `blotis`); once logged in it opens the
+add-project form. Submitting the form adds the project to your shelf right
+now (saved in this browser via local storage) and generates the exact code
+block above so you can paste it into `projects.js` to publish it for
+everyone.
+
+**About the admin login:** this is a static site with no server, so there's
+no way to build a real login system — the check happens entirely in the
+visitor's browser. It's stored as a password hash rather than plain text,
+which stops it from being trivially readable in "view source", but anyone
+comfortable with browser dev tools could still get past it. Treat it as a
+light deterrent for casual visitors, not real security. If you ever need
+real authentication (so *only you* can truly control the shelf), that
+requires a backend — happy to help set one up if you get there.
+
+To change the admin username or password, open `script.js` and edit
+`ADMIN_USERNAME`, then generate a new SHA-256 hash of your password (for
+example by running `echo -n "yourpassword" | shasum -a 256` in a terminal)
+and paste it into `ADMIN_PASSWORD_HASH`.
 
 ## Images
 
