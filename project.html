@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title id="pageTitle">Project — Alex Rowan</title>
+<meta name="description" id="pageDesc" content="Project case study." />
+<link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+<header class="site-header">
+  <nav class="nav" aria-label="Primary">
+    <a class="nav-brand" href="index.html">Alex Rowan<span>.</span></a>
+    <ul class="nav-links" style="display:flex;position:static;background:none;border:none;padding:0;">
+      <li><a href="index.html#projects">All projects</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+  <div id="notFound" class="section hidden-initial" style="display:none;">
+    <div class="container">
+      <p class="empty-state">This project couldn't be found. <a href="index.html#projects">Back to all projects</a>.</p>
+    </div>
+  </div>
+
+  <div id="projectContent">
+    <section class="detail-hero">
+      <div class="container">
+        <a class="back-link" href="index.html#projects">&larr; All projects</a>
+        <div class="detail-title-row">
+          <div>
+            <p class="eyebrow" id="dCategory">// category</p>
+            <h1 id="dTitle">Project title</h1>
+            <p class="short" id="dShort">Short description</p>
+          </div>
+          <span class="status-pill" id="dStatus">Status</span>
+        </div>
+        <div class="detail-media-hero" id="dHeroMediaWrap">
+          <img id="dHeroImage" src="" alt="" />
+        </div>
+        <div class="spec-table" id="dSpecTable"></div>
+        <div class="tag-list" id="dTags"></div>
+        <div class="link-row" id="dLinks"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container detail-body">
+        <div id="caseSections"></div>
+
+        <div id="gallerySection">
+          <div class="case-section">
+            <h2>Screenshots</h2>
+            <div class="gallery-grid" id="galleryGrid"></div>
+          </div>
+        </div>
+
+        <div id="videoSection" class="media-block"></div>
+        <div id="gifSection" class="media-block"></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-row">
+    <div class="name">Alex Rowan</div>
+    <div class="role">Gameplay Programmer / Unreal Engine Developer</div>
+  </div>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous image">&larr;</button>
+  <img id="lightboxImg" src="" alt="" />
+  <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next image">&rarr;</button>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/store.js"></script>
+<script src="js/background.js"></script>
+<script src="js/project-detail.js"></script>
+</body>
+</html>

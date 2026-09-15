@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin dashboard</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+<div class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="admin-brand">Alex Rowan<span>.</span></div>
+    <a class="view-site" href="../index.html" target="_blank" rel="noopener">View live site &#8599;</a>
+    <ul class="admin-nav">
+      <li><button data-view="overview" class="active">Overview</button></li>
+      <li><button data-view="projects">Manage projects</button></li>
+      <li><button data-view="editor" id="navAddProject">Add project</button></li>
+    </ul>
+    <button class="btn btn-outline btn-sm" id="logoutBtn" style="margin-top:1rem;">Log out</button>
+  </aside>
+
+  <main class="admin-main">
+    <!-- OVERVIEW -->
+    <section id="view-overview" class="admin-view">
+      <div class="admin-topbar"><h1>Dashboard</h1></div>
+      <div class="stat-grid" id="statGrid"></div>
+      <div class="panel">
+        <h2>Recent projects</h2>
+        <div id="recentProjects"></div>
+      </div>
+    </section>
+
+    <!-- MANAGE PROJECTS -->
+    <section id="view-projects" class="admin-view" style="display:none;">
+      <div class="admin-topbar">
+        <h1>Manage projects</h1>
+        <button class="btn btn-primary btn-sm" id="newProjectBtn">+ Add project</button>
+      </div>
+      <div class="panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
+          <p class="order-mode-note" id="orderModeNote"></p>
+          <div style="display:flex; gap:0.5rem;">
+            <button class="btn btn-outline btn-sm" id="useDateSort">Sort by date</button>
+            <button class="btn btn-outline btn-sm" id="useManualSort">Enable manual order</button>
+          </div>
+        </div>
+        <div id="projectList"></div>
+      </div>
+    </section>
+
+    <!-- ADD / EDIT PROJECT -->
+    <section id="view-editor" class="admin-view" style="display:none;">
+      <div class="admin-topbar">
+        <h1 id="editorHeading">Add project</h1>
+      </div>
+      <form id="projectForm">
+        <input type="hidden" id="f_id" />
+
+        <fieldset>
+          <legend>General</legend>
+          <div class="form-grid">
+            <div class="field full"><label for="f_title">Project name *</label><input id="f_title" required /></div>
+            <div class="field full"><label for="f_shortDescription">Short description *</label><input id="f_shortDescription" maxlength="140" required /></div>
+            <div class="field full"><label for="f_description">Full description</label><textarea id="f_description" rows="3"></textarea></div>
+            <div class="field"><label for="f_category">Category</label><input id="f_category" placeholder="e.g. Tactics / Strategy" /></div>
+            <div class="field">
+              <label for="f_status">Status</label>
+              <select id="f_status">
+                <option>In Development</option>
+                <option>Completed</option>
+                <option>On Hold</option>
+                <option>Prototype</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Timeline</legend>
+          <div class="form-grid">
+            <div class="field"><label for="f_startDate">Start date</label><input type="month" id="f_startDate" /></div>
+            <div class="field"><label for="f_endDate">End date</label><input type="month" id="f_endDate" /></div>
+            <div class="field"><label for="f_releaseDate">Release date (optional)</label><input type="month" id="f_releaseDate" /></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Development</legend>
+          <div class="form-grid">
+            <div class="field"><label for="f_engine">Engine</label><input id="f_engine" placeholder="Unreal Engine 5" /></div>
+            <div class="field"><label for="f_engineVersion">Engine version</label><input id="f_engineVersion" placeholder="5.4" /></div>
+            <div class="field"><label for="f_role">My role</label><input id="f_role" placeholder="Gameplay Programmer" /></div>
+            <div class="field"><label for="f_teamSize">Team size</label><input id="f_teamSize" placeholder="e.g. Solo, or 4" /></div>
+            <div class="field full"><label>Programming languages</label><div class="chip-input" id="chip_languages" data-field="languages"><input placeholder="Type and press Enter" /></div></div>
+            <div class="field full"><label>Development tools</label><div class="chip-input" id="chip_tools" data-field="tools"><input placeholder="Type and press Enter" /></div></div>
+            <div class="field full"><label>Platforms</label><div class="chip-input" id="chip_platforms" data-field="platforms"><input placeholder="Type and press Enter" /></div></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Tags</legend>
+          <div class="field full"><label>Tags (shown as badges + used for filtering)</label><div class="chip-input" id="chip_tags" data-field="tags"><input placeholder="Type and press Enter" /></div></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Media</legend>
+          <div class="field full">
+            <label for="f_thumbnail">Thumbnail / card image URL</label>
+            <input id="f_thumbnail" placeholder="https://…" />
+            <p class="hint">Also used as the case-study hero image. Paste an image URL (e.g. an uploaded screenshot host).</p>
+          </div>
+          <div class="field full">
+            <label for="galleryInput">Gallery images</label>
+            <div style="display:flex; gap:0.5rem;">
+              <input id="galleryInput" placeholder="Paste image URL and click Add" style="flex:1;" />
+              <button type="button" class="btn btn-outline btn-sm" id="addGalleryImage">Add</button>
+            </div>
+            <div class="image-preview-grid" id="galleryPreview"></div>
+          </div>
+          <div class="field full">
+            <label>Videos</label>
+            <div id="videoRepeater"></div>
+            <button type="button" class="btn btn-outline btn-sm" id="addVideoRow">+ Add video</button>
+          </div>
+          <div class="field full">
+            <label>GIFs</label>
+            <div id="gifRepeater"></div>
+            <button type="button" class="btn btn-outline btn-sm" id="addGifRow">+ Add GIF</button>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Links</legend>
+          <div id="linkRepeater"></div>
+          <button type="button" class="btn btn-outline btn-sm" id="addLinkRow">+ Add link</button>
+        </fieldset>
+
+        <fieldset>
+          <legend>Case study (optional — sections only show when filled in)</legend>
+          <div class="form-grid">
+            <div class="field full"><label for="cs_overview">Overview</label><textarea id="cs_overview" rows="2"></textarea></div>
+            <div class="field full"><label for="cs_contribution">My contribution</label><textarea id="cs_contribution" rows="2"></textarea></div>
+            <div class="field full"><label for="cs_technical">Technical details</label><textarea id="cs_technical" rows="2"></textarea></div>
+            <div class="field full"><label for="cs_development">Development</label><textarea id="cs_development" rows="2"></textarea></div>
+            <div class="field full"><label for="cs_challenges">Challenges</label><textarea id="cs_challenges" rows="2"></textarea></div>
+            <div class="field full"><label for="cs_solutions">Solutions</label><textarea id="cs_solutions" rows="2"></textarea></div>
+            <div class="field full"><label for="cs_results">Results</label><textarea id="cs_results" rows="2"></textarea></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Portfolio settings</legend>
+          <div class="form-grid">
+            <div class="field">
+              <label for="f_visibility">Visibility</label>
+              <select id="f_visibility">
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+                <option value="hidden">Hidden</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f_featured">Featured</label>
+              <select id="f_featured">
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <div style="display:flex; gap:0.8rem; margin-top: 0.5rem;">
+          <button type="submit" class="btn btn-primary" id="saveProjectBtn">Save project</button>
+          <button type="button" class="btn btn-outline" id="cancelEditBtn">Cancel</button>
+        </div>
+      </form>
+    </section>
+  </main>
+</div>
+
+<!-- Delete confirmation modal -->
+<div class="modal-backdrop" id="deleteModal">
+  <div class="modal">
+    <h3>Delete this project?</h3>
+    <p id="deleteModalText">This action can't be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" id="cancelDelete">Cancel</button>
+      <button class="btn btn-danger" id="confirmDelete">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../js/config.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/store.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>

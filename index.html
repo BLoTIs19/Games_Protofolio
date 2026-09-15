@@ -1,163 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SHELF/64 — Game Dev Portfolio</title>
-<meta name="description" content="A shelf of shipped and in-progress games.">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Alex Rowan — Gameplay Programmer / Unreal Engine Developer</title>
+<meta name="description" content="Portfolio of Alex Rowan, a gameplay programmer and Unreal Engine developer specializing in gameplay systems, AI, multiplayer and editor tooling." />
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Alex Rowan — Gameplay Programmer / Unreal Engine Developer" />
+<meta property="og:description" content="Gameplay systems, AI, multiplayer and editor tooling in Unreal Engine and C++." />
+<meta property="og:image" content="https://placehold.co/1200x630/14161a/e3a857?text=Alex+Rowan" />
 
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/main.css" />
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
 
-<div class="scanlines" aria-hidden="true"></div>
-<div class="glow-orb glow-orb-a" aria-hidden="true"></div>
-<div class="glow-orb glow-orb-b" aria-hidden="true"></div>
-
-<header class="topbar">
-  <div class="brand">
-    <span class="brand-mark">SHELF<span class="brand-slash">/</span>64</span>
-  </div>
-  <nav class="topnav">
-    <button class="nav-link" data-scroll="#shelf">Cartridges</button>
-    <button class="nav-link" data-scroll="#about">About</button>
-    <button class="nav-link nav-cta" id="authControl">Admin login</button>
+<header class="site-header">
+  <nav class="nav" aria-label="Primary">
+    <a class="nav-brand" href="#top">Alex Rowan<span>.</span></a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span class="visually-hidden">Menu</span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
   </nav>
 </header>
 
-<main>
-  <section class="hero reveal" id="home">
-    <div class="hero-copy">
-      <h1>Every game you've built,<br>on one shelf.</h1>
-      <p class="hero-sub">Insert a cartridge to play the demo, read the making-of notes, or jump to the source. New projects slot in any time — the shelf has no last row.</p>
-      <div class="hero-actions">
-        <button class="btn btn-primary" data-scroll="#shelf">Browse the shelf</button>
-        <button class="btn btn-ghost" data-scroll="#about">How it works</button>
+<main id="main">
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow" id="heroEyebrow">// gameplay programmer</p>
+        <h1 id="heroName">Hi, I'm Alex Rowan</h1>
+        <p class="role" id="heroTitle">Gameplay Programmer / Unreal Engine Developer</p>
+        <p class="tagline" id="heroTagline">
+          I build gameplay systems, tools and interactive experiences in Unreal Engine and C++.
+        </p>
+        <div class="hero-ctas" id="heroCtas"></div>
       </div>
-    </div>
-
-    <div class="rig" aria-hidden="true">
-      <div class="controller" id="controllerArt">
-        <svg viewBox="0 0 220 140" xmlns="http://www.w3.org/2000/svg">
-          <path class="pad-body" d="M45 40 C20 40 8 60 8 82 C8 104 20 118 36 118 C48 118 52 104 66 100 L154 100 C168 104 172 118 184 118 C200 118 212 104 212 82 C212 60 200 40 175 40 Z"/>
-          <circle class="stick" cx="72" cy="66" r="15"/>
-          <circle class="stick" cx="148" cy="84" r="15"/>
-          <g class="dpad">
-            <rect x="30" y="80" width="10" height="26" rx="2"/>
-            <rect x="21" y="89" width="28" height="10" rx="2"/>
-          </g>
-          <g class="face-buttons">
-            <circle cx="190" cy="66" r="6"/>
-            <circle cx="176" cy="80" r="6"/>
-            <circle cx="190" cy="94" r="6"/>
-            <circle cx="204" cy="80" r="6"/>
-          </g>
-        </svg>
-      </div>
-
-      <div class="console-screen">
-        <div class="screen-glow"></div>
-        <pre class="boot-text" id="bootText"></pre>
+      <div class="hero-panel" aria-hidden="true">
+        <div class="hero-panel-row"><span>engine</span><b>Unreal Engine 5</b></div>
+        <div class="hero-panel-row"><span>primary language</span><b>C++</b></div>
+        <div class="hero-panel-row"><span>focus</span><b>Gameplay Systems</b></div>
+        <div class="hero-panel-row"><span>status</span><b>Open to opportunities</b></div>
       </div>
     </div>
   </section>
 
-  <section class="shelf-section reveal" id="shelf">
-    <div class="shelf-head">
-      <h2>The shelf</h2>
-      <div class="filters" id="filters"></div>
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>About</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-copy reveal" id="aboutBio"></div>
+        <div class="reveal">
+          <ul class="focus-list" id="aboutFocus"></ul>
+        </div>
+      </div>
     </div>
-
-    <div class="grid" id="grid"></div>
-
-    <p class="empty-state" id="emptyState" hidden>Nothing on this shelf yet — clear the filter or add a project.</p>
   </section>
 
-  <section class="about reveal" id="about">
-    <h2>About this shelf</h2>
-    <p>This page is a template: swap the copy, the palette, and every entry in <code>projects.js</code> for your own. The grid scales to any number of cartridges — three or three hundred — because it's built from one JavaScript array, not hand-written HTML per project.</p>
-    <p>Anyone can browse. Only the signed-in admin can add new cartridges to the shelf.</p>
+  <!-- SKILLS -->
+  <section class="section" id="skills">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Skills &amp; technologies</h2>
+        <p class="section-desc">The engines, languages and systems I work with most.</p>
+      </div>
+      <div class="skills-grid reveal" id="skillsGrid"></div>
+    </div>
+  </section>
+
+  <!-- FEATURED PROJECTS -->
+  <section class="section" id="featured">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Featured work</h2>
+        <p class="section-desc">A closer look at the projects I'm proudest of.</p>
+      </div>
+      <div class="project-grid reveal" id="featuredGrid"></div>
+    </div>
+  </section>
+
+  <!-- ALL PROJECTS -->
+  <section class="section" id="projects">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>All projects</h2>
+        <p class="section-desc">Filter by technology or search by name.</p>
+      </div>
+      <div class="filter-bar reveal">
+        <div class="filter-tags" id="filterTags"></div>
+        <label class="filter-search">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          <span class="visually-hidden">Search projects</span>
+          <input type="search" id="projectSearch" placeholder="Search projects…" />
+        </label>
+      </div>
+      <div class="project-grid reveal" id="allProjectsGrid"></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Contact</h2>
+        <p class="section-desc">The fastest way to reach me is email.</p>
+      </div>
+      <div class="contact-grid reveal" id="contactGrid"></div>
+    </div>
   </section>
 </main>
 
-<footer class="footer">
-  <p>Built with plain HTML, CSS and JS — no framework, no build step.</p>
+<footer class="site-footer">
+  <div class="container footer-row">
+    <div>
+      <div class="name" id="footerName">Alex Rowan</div>
+      <div class="role" id="footerRole">Gameplay Programmer / Unreal Engine Developer</div>
+    </div>
+    <ul class="footer-links" id="footerLinks"></ul>
+    <div class="role">&copy; <span id="footerYear"></span> <span id="footerName2">Alex Rowan</span></div>
+  </div>
 </footer>
 
-<!-- Floating add button (admin only) -->
-<button class="fab" id="fabAdd" title="Add a project" aria-label="Add a project">
-  <span aria-hidden="true">+</span>
-</button>
-
-<!-- Project detail modal -->
-<div class="modal-overlay" id="detailOverlay" hidden>
-  <div class="modal detail-modal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
-    <button class="modal-close" data-close>&times;</button>
-    <div id="detailContent"></div>
-  </div>
-</div>
-
-<!-- Login modal -->
-<div class="modal-overlay" id="loginOverlay" hidden>
-  <div class="modal login-modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
-    <button class="modal-close" data-close>&times;</button>
-    <h3 id="loginTitle">Admin login</h3>
-    <p class="add-intro">Only the admin can add projects. Everyone else browses in view-only mode.</p>
-    <form id="loginForm">
-      <label>Username <input required name="username" autocomplete="username"></label>
-      <label>Password <input required type="password" name="password" autocomplete="current-password"></label>
-      <p class="login-error" id="loginError" hidden>Wrong username or password.</p>
-      <div class="add-actions">
-        <button type="submit" class="btn btn-primary">Log in</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- Add project helper modal -->
-<div class="modal-overlay" id="addOverlay" hidden>
-  <div class="modal add-modal" role="dialog" aria-modal="true" aria-labelledby="addTitle">
-    <button class="modal-close" data-close>&times;</button>
-    <h3 id="addTitle">Add a project to the shelf</h3>
-    <p class="add-intro">This site is a static page — perfect for GitHub Pages, but it has no server to store uploads permanently. Submitting this adds the project to the shelf right now (saved in this browser), and gives you a ready-to-paste code block for <code>projects.js</code> so it shows up for every visitor once you publish it.</p>
-
-    <form id="addForm">
-      <div class="field-row">
-        <label>Title <input required name="title" placeholder="Lantern Keep"></label>
-        <label>Year <input name="year" placeholder="2026"></label>
-      </div>
-      <label class="field-full">Tagline <input name="tagline" placeholder="A cozy roguelike about tending a dying lighthouse."></label>
-      <label class="field-full">Description <textarea name="description" rows="3" placeholder="What it is, what you built, what's interesting about it."></textarea></label>
-      <div class="field-row">
-        <label>Engine / tools <input name="engine" placeholder="Godot, Aseprite"></label>
-        <label>Tags (comma separated) <input name="tags" placeholder="roguelike, solo, pixel art"></label>
-      </div>
-      <div class="field-row">
-        <label>Cover image URL <input name="image" placeholder="assets/lantern-keep/cover.png"></label>
-        <label>Gallery URLs (comma separated) <input name="gallery" placeholder="assets/lantern-keep/1.png, assets/lantern-keep/2.png"></label>
-      </div>
-      <div class="field-row">
-        <label>Play / demo link <input name="playUrl" placeholder="https://yourname.itch.io/lantern-keep"></label>
-        <label>Source code link <input name="codeUrl" placeholder="https://github.com/you/lantern-keep"></label>
-      </div>
-      <div class="add-actions">
-        <button type="submit" class="btn btn-primary">Add to shelf + generate code</button>
-      </div>
-    </form>
-
-    <div class="snippet-wrap" id="snippetWrap" hidden>
-      <label for="snippetOut">Paste this into <code>projects.js</code>, inside the <code>PROJECTS</code> array:</label>
-      <textarea id="snippetOut" readonly rows="10"></textarea>
-      <button class="btn btn-ghost" id="copySnippet">Copy code</button>
-    </div>
-  </div>
-</div>
-
-<script src="projects.js"></script>
-<script src="script.js"></script>
+<script src="js/config.js"></script>
+<script src="js/store.js"></script>
+<script src="js/background.js"></script>
+<script src="js/public.js"></script>
 </body>
 </html>

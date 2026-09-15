@@ -1,0 +1,57 @@
+/*
+  Design tokens
+  -------------
+  Visual direction: technical "engine editor / build log" aesthetic for a
+  gameplay & Unreal Engine developer. Graphite surfaces (not pure black),
+  a warm amber signal accent (like a viewport selection highlight) and a
+  muted teal secondary for balance. Spec-style metadata (engine, role,
+  version) uses a monospace face, echoing an in-editor stats readout —
+  used only for that data, not for the whole page.
+*/
+
+:root {
+  /* Color */
+  --bg: #14161a;
+  --bg-raised: #1c1f26;
+  --bg-raised-2: #22262f;
+  --border: #2c303a;
+  --border-strong: #3a3f4b;
+
+  --text: #e9e7e2;
+  --text-muted: #a3a8b5;
+  --text-faint: #6b7080;
+
+  --accent: #e3a857;
+  --accent-strong: #f0bd76;
+  --accent-ink: #2a1c08;
+
+  --accent-2: #5fa8a0;
+  --accent-2-strong: #7cc0b8;
+
+  --danger: #d9695f;
+  --success: #6fae7a;
+
+  /* Type */
+  --font-display: "Space Grotesk", "Segoe UI", sans-serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+
+  /* Scale */
+  --step--1: clamp(0.8rem, 0.78rem + 0.1vw, 0.875rem);
+  --step-0: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --step-1: clamp(1.15rem, 1.1rem + 0.25vw, 1.3rem);
+  --step-2: clamp(1.4rem, 1.3rem + 0.5vw, 1.75rem);
+  --step-3: clamp(1.9rem, 1.6rem + 1.2vw, 2.6rem);
+  --step-4: clamp(2.4rem, 1.9rem + 2.2vw, 3.75rem);
+
+  /* Layout */
+  --max-width: 1180px;
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --gap: 1.5rem;
+
+  --shadow-1: 0 1px 0 rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.35);
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
